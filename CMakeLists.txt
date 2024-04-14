@@ -1,0 +1,13 @@
+cmake_minimum_required(VERSION 3.28)
+project(text_editor)
+
+set(CMAKE_CXX_STANDARD 20)
+
+add_executable(text_editor main.cpp
+        piece_table.cpp
+        piece_table.h
+        rbtree.cpp
+        rbtree.h
+        rbtree_test.cpp
+        rbtree_test.h
+)
