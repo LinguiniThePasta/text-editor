@@ -4,7 +4,7 @@
 
 namespace PieceTree {
     node *RedBlackTree::getRoot() {
-        return nullptr;
+        return this->rootNode;
     }
     node *RedBlackTree::getLeft() {
         return nullptr;
@@ -14,6 +14,9 @@ namespace PieceTree {
     }
     bool RedBlackTree::isEmpty() {
         return true;
+    }
+    pieceTable RedBlackTree::getStringTable() {
+        return this->stringTable;
     }
     RedBlackTree *RedBlackTree::buildTree(buffer) {
         return nullptr;
@@ -30,8 +33,9 @@ namespace PieceTree {
     RedBlackTree * RedBlackTree::fixViolationDelete(node* root, node* ptr) {
         return nullptr;
     }
-    RedBlackTree * RedBlackTree::insertNode(node* root, node* ptr) {
-        return nullptr;
+    RedBlackTree * RedBlackTree::insertNode(node* ptr) {
+        this->rootNode = ptr;
+        return this;
     }
     RedBlackTree * RedBlackTree::deleteNode(node* root, node* ptr) {
         return nullptr;

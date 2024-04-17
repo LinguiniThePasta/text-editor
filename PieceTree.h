@@ -43,21 +43,24 @@ namespace PieceTree {
             stringTable.textBuffer = {}; // empty vector
             stringTable.editBuffer = {}; // empty vector
         }
-    private:
-        node* rootNode;
-        pieceTable stringTable;
-
         node* getRoot();
         node* getLeft();
         node* getRight();
         bool isEmpty();
+        pieceTable getStringTable();
+        RedBlackTree* insertNode(node* ptr);
+        RedBlackTree* deleteNode(node* root, node* ptr);
+    private:
+        node* rootNode;
+        pieceTable stringTable;
+
+
         RedBlackTree* buildTree(buffer);
         RedBlackTree* rotateLeft(node* root);
         RedBlackTree* rotateRight(node* root);
         RedBlackTree* fixViolationInsert(node* root, node* ptr);
         RedBlackTree* fixViolationDelete(node* root, node* ptr);
-        RedBlackTree* insertNode(node* root, node* ptr);
-        RedBlackTree* deleteNode(node* root, node* ptr);
+
         RedBlackTree* changeColor(node* nodeToBeChanged, Color col);
         std::string readTree();
     };
