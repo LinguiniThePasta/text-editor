@@ -9,7 +9,9 @@
 #include <string>
 
 namespace PieceTree {
-    enum class Color { Red, Black };
+    enum class Color {
+        Red, Black
+    };
 
     struct buffer {
         std::string val; // this is what the buffer actually contains
@@ -28,45 +30,67 @@ namespace PieceTree {
         bufferPosition start; //start offset in buffers[bufferIndex]
         bufferPosition end; // end offset in buffers[bufferIndex]
 
-        int leftSubtreeLength; // number of
+        int leftSubtreeLength; // number of nodes on the left
         int leftSubtreeLfcnt; //left subtree line break count
 
-        node* left;
-        node* right;
-        node* parent;
+        node *left;
+        node *right;
+        node *parent;
         Color color;
     };
 
     class RedBlackTree {
     public:
-        RedBlackTree(): rootNode{nullptr} {
+        RedBlackTree() : rootNode{nullptr} {
             stringTable.textBuffer = {}; // empty vector
             stringTable.editBuffer = {}; // empty vector
         }
-        node* getRoot();
-        node* getLeft();
-        node* getRight();
+
+        node *getRoot();
+
+        node *getLeft();
+
+        node *getRight();
+
         bool isEmpty();
+
         pieceTable getStringTable();
-        RedBlackTree* insertNode(node* ptr);
-        RedBlackTree* deleteNode(node* root, node* ptr);
+
+        RedBlackTree *insertNode(node *insertLocation, node *newNode);
+
+        RedBlackTree *deleteNode(node *root, node *ptr);
+
     private:
-        node* rootNode;
+        node *rootNode;
         pieceTable stringTable;
 
 
-        RedBlackTree* buildTree(buffer);
-        RedBlackTree* rotateLeft(node* root);
-        RedBlackTree* rotateRight(node* root);
-        RedBlackTree* fixViolationInsert(node* root, node* ptr);
-        RedBlackTree* fixViolationDelete(node* root, node* ptr);
+        RedBlackTree *buildTree(buffer);
 
-        RedBlackTree* changeColor(node* nodeToBeChanged, Color col);
+        RedBlackTree *rotateLeft(node *root);
+
+        RedBlackTree *rotateRight(node *root);
+
+        RedBlackTree *fixViolationInsert(node *root, node *ptr);
+
+        RedBlackTree *fixViolationDelete(node *root, node *ptr);
+
+        RedBlackTree *changeColor(node *nodeToBeChanged, Color col);
+
         std::string readTree();
     };
 
-}
+    class EditInterface {
+    public:
 
+    private:
+        RedBlackTree *redBlackTree;
+
+        RedBlackTree *insertText(int lineNumber, int offset);
+
+        RedBlackTree *deleteText(int lineNumber, int offset);
+    };
+}
 
 
 #endif //TEXT_EDITOR_PIECETREE_H
