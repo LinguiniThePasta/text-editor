@@ -21,12 +21,47 @@ namespace PieceTree {
     RedBlackTree *RedBlackTree::buildTree(buffer) {
         return nullptr;
     }
-    RedBlackTree *RedBlackTree::rotateLeft(node *root) {
-        return nullptr;
+    RedBlackTree *RedBlackTree::rotateLeft(node *ptr) {
+        node *y = ptr->right;
+        ptr->right = y->left;
+        y->left->parent = ptr;
+        y->parent = ptr->parent;
+
+        if (ptr->parent == nullptr) {
+            this->rootNode = y;
+        } else {
+            if (ptr == ptr->parent->left) {
+                ptr->parent->left = y;
+            }
+            else {
+                ptr->parent->right = y;
+            }
+        }
+        y->left = ptr;
+        ptr->parent = y;
+        return this;
     }
-    RedBlackTree *RedBlackTree::rotateRight(node *root) {
-        return nullptr;
+    RedBlackTree *RedBlackTree::rotateRight(node *ptr) {
+        node *y = ptr->left;
+        ptr->left = y->right;
+        y->right->parent = ptr;
+        y->parent = ptr->parent;
+
+        if (ptr->parent == nullptr) {
+            this->rootNode = y;
+        } else {
+            if (ptr == ptr->parent->right) {
+                ptr->parent->right = y;
+            }
+            else {
+                ptr->parent->left = y;
+            }
+        }
+        y->right = ptr;
+        ptr->parent = y;
+        return this;
     }
+
     RedBlackTree * RedBlackTree::fixViolationInsert(node* root, node* ptr) {
         return nullptr;
     }
@@ -105,6 +140,7 @@ namespace PieceTree {
 
         return this;
     }
+
     RedBlackTree * RedBlackTree::deleteNode(node* root, node* ptr) {
         return nullptr;
     }
