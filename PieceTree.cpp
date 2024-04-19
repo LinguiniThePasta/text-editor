@@ -21,7 +21,7 @@ namespace PieceTree {
     RedBlackTree *RedBlackTree::buildTree(buffer) {
         return nullptr;
     }
-    RedBlackTree *RedBlackTree::rotateLeft(node *ptr) {
+    void RedBlackTree::rotateLeft(node *ptr) {
         node *y = ptr->right;
         ptr->right = y->left;
         y->left->parent = ptr;
@@ -39,9 +39,8 @@ namespace PieceTree {
         }
         y->left = ptr;
         ptr->parent = y;
-        return this;
-    }
-    RedBlackTree *RedBlackTree::rotateRight(node *ptr) {
+   }
+    void RedBlackTree::rotateRight(node *ptr) {
         node *y = ptr->left;
         ptr->left = y->right;
         y->right->parent = ptr;
@@ -59,95 +58,121 @@ namespace PieceTree {
         }
         y->right = ptr;
         ptr->parent = y;
-        return this;
     }
 
-    RedBlackTree * RedBlackTree::fixViolationInsert(node* root, node* ptr) {
-        return nullptr;
-    }
-    RedBlackTree * RedBlackTree::fixViolationDelete(node* root, node* ptr) {
-        return nullptr;
-    }
-    RedBlackTree * RedBlackTree::insertNode(node *insertLocation, node *newNode) {
-        if (insertLocation == nullptr) {
-            this->rootNode = newNode;
-            newNode->color = Color::Black;
-            return this;
+    void RedBlackTree::fixViolationInsert(node* z) {
+        while (z->parent->color == Color::Red) {
+            if (z->parent == z->parent->parent->left) {
+                node *y = z->parent->parent->right;
+                if (y->color == Color::Red) {
+                    z->parent->color = Color::Black;
+                    y->color = Color::Black;
+                    z->parent->parent->color = Color::Red;
+                    z = z->parent->parent;
+                }
+                else {
+                    if (z == z->parent->right) {
+                        z = z->parent;
+                        rotateLeft(z);
+                    }
+                    z->parent->color = Color::Black;
+                    z->parent->parent->color = Color::Red;
+                    rotateRight(z->parent->parent);
+                }
+            }
+            else {
+                node *y = z->parent->parent->left;
+                if (y->color == Color::Red) {
+                    z->parent->color = Color::Black;
+                    y->color = Color::Black;
+                    z->parent->parent->color = Color::Red;
+                    z = z->parent->parent;
+                }
+                else {
+                    if (z == z->parent->left) {
+                        z = z->parent;
+                        rotateRight(z);
+                    }
+                    z->parent->color = Color::Black;
+                    z->parent->parent->color = Color::Red;
+                    rotateLeft(z->parent->parent);
+                }
+            }
+            this->rootNode->color = Color::Black;
         }
-        char left = 1;
-        if (insertLocation->leftSubtreeLfcnt >= newNode->leftSubtreeLfcnt) {
-            insertLocation->left = newNode;
+    }
+
+    void RedBlackTree::fixViolationDelete(node* root, node* ptr) {
+    }
+
+    void RedBlackTree::insertNode(node *z) {
+
+        node *y = nullptr;
+        node *x = rootNode;
+        while (x != nullptr) {
+            y = x;
+            //TODO: Define the abstraction!
+            //means if z is smaller than x
+            if (!comp(z, x)) {
+                x = x->left;
+            } else {
+                x = x->right;
+            }
+        }
+        z->parent = y;
+        if (y == nullptr) {
+            rootNode = z;
         } else {
-            insertLocation->right = newNode;
-            left = 0;
-        }
-        if (insertLocation->color == Color::Black) {
-            return this;
-        }
-
-        node *uncle = nullptr;
-        //if parent is red, check uncle
-        if (insertLocation != this->rootNode) {
-            if (insertLocation == insertLocation->parent->left) {
-                //uncle is the right child
-                uncle = insertLocation->parent->right;
+            if (!comp(z, y)) {
+                y->left = z;
             } else {
-                //uncle is the left child
-                uncle = insertLocation->parent->left;
+                y->right = z;
             }
         }
-        if (uncle == nullptr || uncle->color == Color::Black) {
-            //TODO: I'm pretty sure this is wrong but we gotta make sure
-            //TODO: I think you need to bubble this up
-            if (!left) {
-                if (insertLocation == insertLocation->parent->left) {
-                    //uncle is the right child
-                    node *newParent = rotateRight(insertLocation);
-                    node *newGrandparent = rotateRight(newNode->parent);
-                    newGrandparent->color = Color::Red;
-                    insertLocation->color = Color::Black;
-                } else {
-                    //uncle is the left child
-                    node *newGrandparent = rotateRight(insertLocation->parent);
-                    newGrandparent->color = Color::Red;
-                    insertLocation->color = Color::Black;
-                }
-            } else {
-                if (insertLocation == insertLocation->parent->right) {
-                    //uncle is the left child
-                    node *newParent = rotateLeft(insertLocation);
-                    node *newGrandparent = rotateLeft(newNode->parent);
-                    newGrandparent->color = Color::Red;
-                    insertLocation->color = Color::Black;
-                } else {
-                    //uncle is the right child
-                    node *newGrandparent = rotateLeft(insertLocation->parent);
-                    newGrandparent->color = Color::Red;
-                    insertLocation->color = Color::Black;
-                }
-            }
-        } else if (uncle->color == Color::Red) {
-            // if uncle and parent are both red, flip uncle, parent, and grandparent colors
-
-            //TODO: I think you need to bubble this up
-            uncle->color = Color::Black;
-            insertLocation->color = Color::Black;
-            if (insertLocation->parent != this->rootNode) {
-                insertLocation->parent->color = Color::Red;
-            }
-        }
-
-
-        return this;
+        z->left = nullptr;
+        z->right = nullptr;
+        z->color = Color::Red;
+        fixViolationInsert(z);
     }
 
-    RedBlackTree * RedBlackTree::deleteNode(node* root, node* ptr) {
-        return nullptr;
+    void RedBlackTree::deleteNode(node* root, node* ptr) {
     }
-    RedBlackTree * RedBlackTree::changeColor(node* nodeToBeChanged, Color col) {
-        return nullptr;
+    void RedBlackTree::changeColor(node* nodeToBeChanged, Color col) {
     }
     std::string RedBlackTree::readTree() {
-        return nullptr;
+    }
+
+    int RedBlackTree::compareNodes(node *a, node *b) {
+        //TODO: make this actually work
+        //return 1 if a should be on the right side of b and 0 otherwise
+        buffer& bufferA = buffers[a->bufferIndex];
+        buffer& bufferB = buffers[b->bufferIndex];
+
+        // Compare the start positions of the nodes
+        int startCompare = compareBufferPositions();
+        if (startCompare != 0) {
+            return startCompare;
+        }
+
+        // If start positions are equal, compare the end positions
+        return compareBufferPositions(a->end, bufferA, b->end, bufferB);
+    }
+    int RedBlackTree::compareBufferPositions() {
+        // Compare the line numbers first
+        if (posA.index < posB.index) {
+            return -1;
+        } else if (posA.index > posB.index) {
+            return 1;
+        }
+
+        // If line numbers are equal, compare the character offsets (remainders)
+        if (posA.remainder < posB.remainder) {
+            return -1;
+        } else if (posA.remainder > posB.remainder) {
+            return 1;
+        }
+
+        // Positions are equal
+        return 0;
     }
 }

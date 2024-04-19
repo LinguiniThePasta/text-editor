@@ -24,6 +24,8 @@ namespace PieceTree {
     struct bufferPosition {
         int index; // index in buffer.lineStarts
         int remainder; // offset in buffer.lineStarts[index]
+        //to get the starting character, you would find the line in val based on lineStarts, and then add remainder to it
+        char textOrEdit; //1 means text, 0 means edit
     };
     struct node {
         int bufferIndex; //index in buffer
@@ -56,10 +58,11 @@ namespace PieceTree {
 
         pieceTable getStringTable();
 
-        RedBlackTree *insertNode(node *insertLocation, node *newNode);
+        void insertNode(node *newNode);
 
-        RedBlackTree *deleteNode(node *root, node *ptr);
+        void deleteNode(node *root, node *ptr);
 
+        int compareNodes(node *a, node *b);
     private:
         node *rootNode;
         pieceTable stringTable;
@@ -67,17 +70,19 @@ namespace PieceTree {
 
         RedBlackTree *buildTree(buffer);
 
-        RedBlackTree *rotateLeft(node *root);
+        void rotateLeft(node *ptr);
 
-        RedBlackTree *rotateRight(node *root);
+        void rotateRight(node *ptr);
 
-        RedBlackTree *fixViolationInsert(node *root, node *ptr);
+        void fixViolationInsert(node *ptr);
 
-        RedBlackTree *fixViolationDelete(node *root, node *ptr);
+        void fixViolationDelete(node *root, node *ptr);
 
-        RedBlackTree *changeColor(node *nodeToBeChanged, Color col);
+        void changeColor(node *nodeToBeChanged, Color col);
 
         std::string readTree();
+
+        int compareBufferPositions();
     };
 
     class EditInterface {
