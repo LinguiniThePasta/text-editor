@@ -143,7 +143,7 @@ namespace PieceTree {
     }
 
     int RedBlackTree::compareNodes(node *a, node *b) {
-        //TODO: make this actually work
+        //TODO: this is dummy code for the time being
         //return 1 if a should be on the right side of b and 0 otherwise
         buffer& bufferA = buffers[a->bufferIndex];
         buffer& bufferB = buffers[b->bufferIndex];
