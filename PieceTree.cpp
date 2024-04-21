@@ -2,6 +2,8 @@
 #include <string>
 #include "PieceTree.h"
 
+
+
 namespace PieceTree {
     node *RedBlackTree::getRoot() {
         return this->rootNode;
@@ -105,27 +107,38 @@ namespace PieceTree {
     void RedBlackTree::fixViolationDelete(node* root, node* ptr) {
     }
 
-    void RedBlackTree::insertNode(node *z) {
-
+    void RedBlackTree::insertNode(node *z, int location) {
         node *y = nullptr;
         node *x = rootNode;
+        int totalOffset = 0;
+        int left = 0;
+        //0 = left, 1 = middle, 2 = right
         while (x != nullptr) {
             y = x;
             //TODO: Define the abstraction!
             //means if z is smaller than x
-            if (!comp(z, x)) {
+            if (location < totalOffset + x->leftSubtreeLength) {
                 x = x->left;
+                left = 0;
+            } else if (location < totalOffset + x->leftSubtreeLength + x->stringLength) {
+                x = x->left;
+                left = 1;
             } else {
                 x = x->right;
+                totalOffset += x->leftSubtreeLength + x->stringLength;
+                left = 2;
             }
         }
+        //Now that you've figured out which node to insert it under, you have to check the buffers and split a buffer into two to add a thing there accordingly
         z->parent = y;
         if (y == nullptr) {
             rootNode = z;
         } else {
-            if (!comp(z, y)) {
+            if (left == 0) {
                 y->left = z;
-            } else {
+            } else if (left == 1) {
+                splitNode(y);
+            }else {
                 y->right = z;
             }
         }
@@ -142,37 +155,5 @@ namespace PieceTree {
     std::string RedBlackTree::readTree() {
     }
 
-    int RedBlackTree::compareNodes(node *a, node *b) {
-        //TODO: this is dummy code for the time being
-        //return 1 if a should be on the right side of b and 0 otherwise
-        buffer& bufferA = buffers[a->bufferIndex];
-        buffer& bufferB = buffers[b->bufferIndex];
 
-        // Compare the start positions of the nodes
-        int startCompare = compareBufferPositions();
-        if (startCompare != 0) {
-            return startCompare;
-        }
-
-        // If start positions are equal, compare the end positions
-        return compareBufferPositions(a->end, bufferA, b->end, bufferB);
-    }
-    int RedBlackTree::compareBufferPositions() {
-        // Compare the line numbers first
-        if (posA.index < posB.index) {
-            return -1;
-        } else if (posA.index > posB.index) {
-            return 1;
-        }
-
-        // If line numbers are equal, compare the character offsets (remainders)
-        if (posA.remainder < posB.remainder) {
-            return -1;
-        } else if (posA.remainder > posB.remainder) {
-            return 1;
-        }
-
-        // Positions are equal
-        return 0;
-    }
 }

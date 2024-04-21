@@ -32,7 +32,8 @@ namespace PieceTree {
         bufferPosition start; //start offset in buffers[bufferIndex]
         bufferPosition end; // end offset in buffers[bufferIndex]
 
-        int leftSubtreeLength; // number of nodes on the left
+        int leftSubtreeLength; // text length not including current node
+        int stringLength;
         int leftSubtreeLfcnt; //left subtree line break count
 
         node *left;
@@ -58,7 +59,7 @@ namespace PieceTree {
 
         pieceTable getStringTable();
 
-        void insertNode(node *newNode);
+        void insertNode(node *newNode, int location);
 
         void deleteNode(node *root, node *ptr);
 
@@ -83,6 +84,8 @@ namespace PieceTree {
         std::string readTree();
 
         int compareBufferPositions();
+
+        int compareBufferPositions(bufferPosition startA, buffer bufferA, bufferPosition startB, buffer &bufferB);
     };
 
     class EditInterface {
